@@ -1,0 +1,9 @@
+{
+	"name": "rickdpdatafactory",
+	"location": "uksouth",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "8f9f4045-da8e-4441-ad4a-f0c631059220",
+		"tenantId": "713808a3-2613-4e47-a202-7b969a327022"
+	}
+}
