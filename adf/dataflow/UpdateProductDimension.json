@@ -1,0 +1,24 @@
+{
+	"name": "UpdateProductDimension",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "ADLS_TSV_AdventureWorks",
+						"type": "DatasetReference"
+					},
+					"name": "AzureDLS"
+				}
+			],
+			"sinks": [],
+			"transformations": [],
+			"scriptLines": [
+				"source(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     ignoreNoFilesFound: false) ~> AzureDLS"
+			]
+		}
+	}
+}
