@@ -26,11 +26,36 @@
 					"name": "ProductCategory"
 				}
 			],
-			"sinks": [],
+			"sinks": [
+				{
+					"linkedService": {
+						"referenceName": "rickdatalakev2",
+						"type": "LinkedServiceReference"
+					},
+					"name": "WriteToDataLake"
+				}
+			],
 			"transformations": [
 				{
-					"name": "select1",
+					"name": "SelectProductColumns",
 					"description": "Renaming Product to select1 with columns 'ProductId, Product, SubcategoryId'"
+				},
+				{
+					"name": "SelectProductSubCategoryColumns",
+					"description": "Renaming ProductSubcategory to select2 with columns 'SubcategoryId, CategoryId, Subcategory'"
+				},
+				{
+					"name": "SelectProductCategoryColumns",
+					"description": "Renaming ProductCategory to select3 with columns 'CategoryId, Category'"
+				},
+				{
+					"name": "Lookupstream"
+				},
+				{
+					"name": "LookupProductCategory"
+				},
+				{
+					"name": "RemoveDuplicateColumns"
 				}
 			],
 			"scriptLines": [
@@ -74,38 +99,64 @@
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false) ~> ProductSubcategory",
-				"source(allowSchemaDrift: true,",
+				"source(output(",
+				"          CategoryId as integer,",
+				"          Category as string,",
+				"          {_col2_} as string,",
+				"          {_col3_} as timestamp",
+				"     ),",
+				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false) ~> ProductCategory",
 				"Product select(mapColumn(",
 				"          ProductId,",
 				"          Product,",
-				"          {_col2_},",
-				"          {_col3_},",
-				"          {_col4_},",
-				"          {_col5_},",
-				"          {_col6_},",
-				"          {_col7_},",
-				"          {_col8_},",
-				"          {_col9_},",
-				"          {_col10_},",
-				"          {_col11_},",
-				"          {_col12_},",
-				"          {_col13_},",
-				"          {_col14_},",
-				"          {_col15_},",
-				"          {_col16_},",
-				"          {_col17_},",
-				"          SubcategoryId,",
-				"          {_col19_},",
-				"          {_col20_},",
-				"          {_col21_},",
-				"          {_col22_},",
-				"          {_col23_},",
-				"          {_col24_}",
+				"          SubcategoryId",
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> select1"
+				"     skipDuplicateMapOutputs: true) ~> SelectProductColumns",
+				"ProductSubcategory select(mapColumn(",
+				"          SubcategoryId,",
+				"          CategoryId,",
+				"          Subcategory",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> SelectProductSubCategoryColumns",
+				"ProductCategory select(mapColumn(",
+				"          CategoryId,",
+				"          Category",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> SelectProductCategoryColumns",
+				"SelectProductColumns, LookupProductCategory lookup(SelectProductColumns@SubcategoryId == SelectProductSubCategoryColumns@SubcategoryId,",
+				"     multiple: false,",
+				"     pickup: 'any',",
+				"     broadcast: 'auto')~> Lookupstream",
+				"SelectProductSubCategoryColumns, SelectProductCategoryColumns lookup(SelectProductSubCategoryColumns@CategoryId == SelectProductCategoryColumns@CategoryId,",
+				"     multiple: false,",
+				"     pickup: 'any',",
+				"     broadcast: 'auto')~> LookupProductCategory",
+				"Lookupstream select(mapColumn(",
+				"          ProductId,",
+				"          Product,",
+				"          SubcategoryId = SelectProductColumns@SubcategoryId,",
+				"          CategoryId = SelectProductSubCategoryColumns@CategoryId,",
+				"          Subcategory,",
+				"          Category",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> RemoveDuplicateColumns",
+				"RemoveDuplicateColumns sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     format: 'parquet',",
+				"     fileSystem: 'lakeroot',",
+				"     folderPath: 'Conformed/DimProduct',",
+				"     truncate: true,",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> WriteToDataLake"
 			]
 		}
 	}
