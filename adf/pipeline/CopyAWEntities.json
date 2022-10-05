@@ -4,7 +4,7 @@
 		"description": "Copies a list of entitites from ",
 		"activities": [
 			{
-				"name": "ForEach1",
+				"name": "ForEach Entity",
 				"type": "ForEach",
 				"dependsOn": [],
 				"userProperties": [],
@@ -12,6 +12,29 @@
 					"items": {
 						"value": "@variables(\"Entities\")",
 						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "ExecuteCopyAWEntity",
+				"type": "ExecutePipeline",
+				"dependsOn": [
+					{
+						"activity": "ForEach Entity",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"pipeline": {
+						"referenceName": "CopyAWEntity",
+						"type": "PipelineReference"
+					},
+					"waitOnCompletion": true,
+					"parameters": {
+						"Entity": "@item()"
 					}
 				}
 			}
