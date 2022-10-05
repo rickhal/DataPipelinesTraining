@@ -56,6 +56,9 @@
 				},
 				{
 					"name": "RemoveDuplicateColumns"
+				},
+				{
+					"name": "sort1"
 				}
 			],
 			"scriptLines": [
@@ -146,7 +149,8 @@
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true) ~> RemoveDuplicateColumns",
-				"RemoveDuplicateColumns sink(allowSchemaDrift: true,",
+				"RemoveDuplicateColumns sort(asc(Subcategory, true)) ~> sort1",
+				"sort1 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     format: 'parquet',",
 				"     fileSystem: 'lakeroot',",
