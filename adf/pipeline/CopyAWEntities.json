@@ -1,0 +1,31 @@
+{
+	"name": "CopyAWEntities",
+	"properties": {
+		"description": "Copies a list of entitites from ",
+		"activities": [
+			{
+				"name": "ForEach1",
+				"type": "ForEach",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@variables(\"Entities\")",
+						"type": "Expression"
+					}
+				}
+			}
+		],
+		"variables": {
+			"Entities": {
+				"type": "Array",
+				"defaultValue": [
+					"Product",
+					"ProductSubCategory",
+					"ProductCategory"
+				]
+			}
+		},
+		"annotations": []
+	}
+}
