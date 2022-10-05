@@ -1,7 +1,7 @@
 {
 	"name": "CopyAWEntities",
 	"properties": {
-		"description": "Copies a list of entitites from ",
+		"description": "Copies a list of entities from ",
 		"activities": [
 			{
 				"name": "ForEach Entity",
@@ -10,32 +10,28 @@
 				"userProperties": [],
 				"typeProperties": {
 					"items": {
-						"value": "@variables(\"Entities\")",
+						"value": "@variables('Entities')",
 						"type": "Expression"
-					}
-				}
-			},
-			{
-				"name": "ExecuteCopyAWEntity",
-				"type": "ExecutePipeline",
-				"dependsOn": [
-					{
-						"activity": "ForEach Entity",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
-				"userProperties": [],
-				"typeProperties": {
-					"pipeline": {
-						"referenceName": "CopyAWEntity",
-						"type": "PipelineReference"
 					},
-					"waitOnCompletion": true,
-					"parameters": {
-						"Entity": "@item()"
-					}
+					"isSequential": false,
+					"activities": [
+						{
+							"name": "CopyAWEntities",
+							"type": "ExecutePipeline",
+							"dependsOn": [],
+							"userProperties": [],
+							"typeProperties": {
+								"pipeline": {
+									"referenceName": "CopyAWEntity",
+									"type": "PipelineReference"
+								},
+								"waitOnCompletion": true,
+								"parameters": {
+									"Entity": "@item()"
+								}
+							}
+						}
+					]
 				}
 			}
 		],
@@ -44,7 +40,7 @@
 				"type": "Array",
 				"defaultValue": [
 					"Product",
-					"ProductSubCategory",
+					"ProductSubcategory",
 					"ProductCategory"
 				]
 			}
