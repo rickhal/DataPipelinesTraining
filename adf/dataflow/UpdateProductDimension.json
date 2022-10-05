@@ -149,7 +149,7 @@
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true) ~> RemoveDuplicateColumns",
-				"RemoveDuplicateColumns sort(asc(Subcategory, true)) ~> sort1",
+				"RemoveDuplicateColumns sort(desc(Subcategory, true)) ~> sort1",
 				"sort1 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     format: 'parquet',",

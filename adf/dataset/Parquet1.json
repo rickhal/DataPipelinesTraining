@@ -1,0 +1,45 @@
+{
+	"name": "Parquet1",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "rickdatalakev2",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Parquet",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"folderPath": "Conformed/DimProduct",
+				"fileSystem": "lakeroot"
+			},
+			"compressionCodec": "snappy"
+		},
+		"schema": [
+			{
+				"name": "ProductId",
+				"type": "INT32"
+			},
+			{
+				"name": "Product",
+				"type": "UTF8"
+			},
+			{
+				"name": "SubcategoryId",
+				"type": "INT32"
+			},
+			{
+				"name": "CategoryId",
+				"type": "INT32"
+			},
+			{
+				"name": "Subcategory",
+				"type": "UTF8"
+			},
+			{
+				"name": "Category",
+				"type": "UTF8"
+			}
+		]
+	}
+}
