@@ -1,0 +1,10 @@
+{
+	"name": "rickdatalakev2",
+	"properties": {
+		"annotations": [],
+		"type": "AzureBlobFS",
+		"typeProperties": {
+			"url": "https://rickdpstorageacc01.dfs.core.windows.net/"
+		}
+	}
+}

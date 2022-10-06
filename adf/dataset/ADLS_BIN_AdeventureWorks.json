@@ -1,0 +1,24 @@
+{
+	"name": "ADLS_BIN_AdeventureWorks",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "rickdatalakev2",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"Entity": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "Binary",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "@{dataset().Entity}.tsv",
+				"folderPath": "Raw",
+				"fileSystem": "lakeroot"
+			}
+		}
+	}
+}
